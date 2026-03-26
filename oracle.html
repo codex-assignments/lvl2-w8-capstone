@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Rules Oracle | An Interactive 'Betrayal at House on the Hill' Guide</title>
+    <title>
+      The Rules Oracle | An Interactive 'Betrayal at House on the Hill' Guide
+    </title>
     <script src="app.js" defer></script>
     <link
       href="https://cdn.jsdelivr.net/npm/daisyui@5"
@@ -11,13 +13,15 @@
       type="text/css"
     />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body class="font-serif bg-black h-screen flex flex-col lg:items-center">
     <!-- Color scheme: Background: bg-stone-950; Chat area: bg-stone-900; Accents: text-red-900 or border-red-950; Text: text-stone-300 -->
-   
-    <header class="p-4 border-b border-stone-800 bg-stone-950 text-center w-screen">
-        <nav></nav>
+
+    <header
+      class="p-4 border-b border-stone-800 bg-stone-950 text-center w-screen"
+    >
+      <nav></nav>
       <h1
         class="text-2xl tracking-widest uppercase text-red-900 drop-shadow-[0_2px_2px_rgba(0,0,0,1)] md:text-3xl lg:text-4xl"
       >
@@ -25,13 +29,104 @@
       </h1>
     </header>
     <main class="flex flex-col grow overflow-hidden w-full items-center">
-    <div id="chatWindow"
-          class="flex flex-col w-full max-w-[930px] justify-between bg-black text-stone-300 lg:w-[930px] h-full"
-        >
+      <div
+        id="chatWindow"
+        class="flex flex-col w-full max-w-[930px] justify-between bg-black text-stone-300 lg:w-[930px] h-full"
+      >
+        <div
+          id="output"
+          class="flex flex-col flex-1 bg-black overflow-y-auto p-4 w-full custom-scrollbar"
+        ></div>
 
-            <div id="output" class="flex flex-col flex-1 bg-black overflow-y-auto p-4 w-full custom-scrollbar"></div>
+        <footer class="p-3 border-t border-stone-800 bg-stone-950">
+          <!-- Drop down menus and confirm button for selecting which Haunt rules to send to the AI -->
+          <div id="hauntWrapper" class="max-h-0 opacity-0 invisible overflow-hidden transition-all duration-500 ease-in-out">
+            <!-- room selector dropdown -->
+            <div id="roomDropdown" class="form-control w-full max-w-xs">
+              <label class="label">
+                <span
+                  class="label-text text-stone-400 uppercase tracking-widest text-xs"
+                  >Trigger Room</span
+                >
+              </label>
+              <select
+                id="roomSelect"
+                class="select select-bordered border-stone-800 bg-stone-900 text-stone-200 focus:border-red-900"
+              >
+                <option disabled selected>Select the room...</option>
+                <option>Abandoned Room</option>
+                <option>Any</option>
+                <option>Attic</option>
+                <option>Balcony</option>
+                <option>Basement</option>
+                <option>Basement Landing</option>
+                <option>Bedroom</option>
+                <option>Chapel</option>
+                <option>Chasm</option>
+                <option>Collapsed Room</option>
+                <option>Conservatory</option>
+                <option>Dining Room</option>
+                <option>Entrance Hall</option>
+                <option>Gallery</option>
+                <option>Game Room</option>
+                <option>Gardens</option>
+                <option>Grand Staircase</option>
+                <option>Graveyard</option>
+                <option>Junk Room</option>
+                <option>Kitchen</option>
+                <option>Laboratory</option>
+                <option>Library</option>
+                <option>Nursery</option>
+                <option>Pentagram</option>
+                <option>Roof</option>
+                <option>Séance Room</option>
+                <option>Servants' Quarters</option>
+                <option>Statuary Corridor</option>
+                <option>Toy Shop</option>
+                <option>Underground Lake</option>
+                <option>Vault</option>
+              </select>
+            <!-- omen selector dropdown -->
+              <div class="form-control w-full max-w-xs">
+                <label class="label">
+                  <span
+                    class="label-text text-stone-400 uppercase tracking-widest text-xs"
+                    >Trigger Omen</span
+                  >
+                </label>
+                <select
+                  id="omenSelect"
+                  class="select select-bordered border-stone-800 bg-stone-900 text-stone-200 focus:border-red-900"
+                >
+                  <option disabled selected>Select the omen...</option>
+                  <option>Bones</option>
+                  <option>Book</option>
+                  <option>Bottle</option>
+                  <option>Crystal Ball</option>
+                  <option>Dog</option>
+                  <option>Girl</option>
+                  <option>Locket</option>
+                  <option>Mask</option>
+                  <option>Medallion</option>
+                  <option>Mirror</option>
+                  <option>Music Box</option>
+                  <option>Puppet</option>
+                  <option>Ring</option>
+                  <option>Skull</option>
+                  <option>Spear</option>
+                  <option>Spirit Board</option>
+                </select>
+              </div>
+            </div>
 
-          <footer class="p-4 border-t border-stone-800 bg-stone-950">
+            <div class="form-control w-full max-w-xs group">
+              <button
+                id="triggerHauntBtn"
+                class="btn btn-md bg-red-950 hover:bg-red-900 border-red-800 text-stone-200 uppercase tracking-widest font-serif shadow-[0_0_10px_rgba(153,27,27,0.3)] hover:shadow-[0_0_20px_rgba(153,27,27,0.8)] animate-pulse group-hover:animate-none group-active:scale-95 transition-all duration-300 my-4"
+              >Face Your Fate
+              </button>
+            </div>
+          </div>
             <!-- State toggle: Exploration mode vs Haunt Activated mode -->
             <label class="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" class="sr-only peer" id="hauntToggle" />
@@ -44,23 +139,23 @@
                 The Haunt Begins
               </span>
             </label>
-            <!-- End of state toggle -->
-            <form id="chatForm" class="max-w-4xl mx-auto flex gap-2">
-              <input
-                type="text"
-                id="inputField"
-                class="flex-1 w-60 bg-stone-900 border border-stone-800 p-3 rounded-sm focus:outline-none focus:ring-1 focus:ring-red-900 transition-all placeholder-stone-700"
-                placeholder="Ask the Oracle..."
-              />
-              <button
-                id="sendBtn"
-                class="bg-red-950 hover:bg-red-900 text-stone-200 px-6 rounded-sm border border-red-800 transition-colors uppercase tracking-tighter text-sm"
-              >
-                Consult
-              </button>
-            </form>
-          </footer>
-        </div>
+          <!-- End of state toggle -->
+          <form id="chatForm" class="max-w-4xl mx-auto flex gap-2">
+            <input
+              type="text"
+              id="inputField"
+              class="flex-1 w-60 bg-stone-900 border border-stone-800 p-3 rounded-sm focus:outline-none focus:ring-1 focus:ring-red-900 transition-all placeholder-stone-700"
+              placeholder="Ask the Oracle..."
+            />
+            <button
+              id="sendBtn"
+              class="bg-red-950 hover:bg-red-900 text-stone-200 px-6 rounded-sm border border-red-800 transition-colors uppercase tracking-tighter text-sm"
+            >
+              Consult
+            </button>
+          </form>
+        </footer>
+      </div>
     </main>
     <footer
       class="text-center pt-2 px-8 text-sm text-stone-500 border-t border-stone-700 mt-2"
@@ -78,7 +173,9 @@
         with Google Gemini API for fun and educational purposes. <br />All game
         rules and thematic content belong to their respective owners.
       </p>
-      <div class="hidden text-red-600 bg-red-900 text-stone-500 tracking-widest ml-5 px-1 underline decoration-red-900 italic uppercase"></div>
+      <div
+        class="hidden text-red-600 bg-red-900 text-stone-500 tracking-widest ml-5 px-1 underline decoration-red-900 italic uppercase"
+      ></div>
     </footer>
   </body>
 </html>

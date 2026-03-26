@@ -5,15 +5,22 @@ const output = document.getElementById("output");
 const chatForm = document.getElementById("chatForm");
 const inputField = document.getElementById("inputField");
 const sendBtn = document.getElementById("sendBtn");
+const hauntWrapper = document.getElementById("hauntWrapper");
 const hauntToggle = document.getElementById("hauntToggle");
+const triggerHauntBtn = document.getElementById("triggerHauntBtn");
+const selectedRoom = document.getElementById("roomSelect").value;
+const selectedOmen = document.getElementById("omenSelect").value;
+let hauntDatabase = [];
 const hauntMessages = [
   "A sudden, heavy silence falls over the house. <strong>The Haunt has begun:</strong> You are no longer alone in these halls.",
   "The air grows cold and the shadows begin to stretch. <strong>The Haunt has begun:</strong> The rules of survival have changed.",
   "A chilling realization takes hold of your mind. <strong>The Haunt has begun:</strong> The true nature of this nightmare is revealed.",
   "The exits vanish and the walls seem to close in. <strong>The Haunt has begun:</strong> There is no escape until the task is complete.",
   "Trust evaporates like mist in the wind. <strong>The Haunt has begun:</strong> Dark intentions have finally come to light.",
-  "The clock strikes the final hour of dread. <strong>The Haunt has begun:</strong> The cycle of horror reaches its peak.",
 ];
+
+//Message history array: create empty array to build message history in, this will be what is posted to chatbot with each form-submit or send-button click
+const contents = [];
 
 // *** HELPER FUNCTIONS
 //Speeds up the initial response time from fetching the key from render.com
@@ -104,6 +111,29 @@ function triggerGreeting() {
   });
 }
 
+// *** pull haunt objects from json file and assigns it to array variable, hauntDatabase***
+
+async function loadHauntData() {
+  try {
+    const res = await fetch("/assets/haunts.json");
+    if (!res.ok) {
+      throw new Error("Failed to load haunt data.");
+    }
+    const data = await res.json();
+    hauntDatabase = data.haunts;
+    console.log("Haunts database loaded successfully.");
+  } catch (error) {
+    console.log("Failed to load JSON:", error);
+  }
+}
+
+// ** filter database for what is selected in the dropdown menus***
+function getHaunt(room, omen) {
+  return hauntDatabase.find(
+    (h) => h.trigger_room === room && h.trigger_omen === omen,
+  );
+}
+
 // *** Call Gemini API function ***
 // Returns AI response. Calls and inserts the API key to a POST request to Gemini AI API containing array of information from user input and saved message/response history created in main function
 async function callGemini(contents) {
@@ -150,20 +180,19 @@ async function callGemini(contents) {
 
 async function main() {
   //render initial message, like a loading message
-    renderLoading();
-    //!turn back on after testing
+  renderLoading();
+  // load the json file of haunt objects to make available as an array variable, hauntDatabase
+  loadHauntData();
+  //!turn next line back on after testing
   //wake up function
-//   await wakeUp();
+  //   await wakeUp();
   //clear text content after proxy key server is woken up
   clearChat();
   //render hardcoded initial greeting "from" AI chat bot prompting input from the user
   triggerGreeting();
-  
-  //Message history array: create empty array to build message history in, this will be what is posted to chatbot with each form-submit or send-button click
-    const contents = [];
-    
+
   // *** within main, event listener for the haunt toggle and effects, adds a message to chat history to notify Gemini that the haunt is active or inactive, renders a message to the user on the DOM
-  
+
   hauntToggle.addEventListener("change", (e) => {
     if (e.target.checked) {
       //randomize haunt message
@@ -175,11 +204,18 @@ async function main() {
         role: "system",
         parts: [
           {
-            text: "The Haunt is now active. Use the Haunt rules and use a more ominous, horror-themed, and urgent tone.",
+            text: "The Haunt is now active. Use the Haunt rules and use a more ominous, horror-themed, and urgent tone. **Haunt rules** ",
           },
         ],
       });
       renderOracle(hauntMessages[randomIndex]);
+      hauntWrapper.classList.remove("max-h-0", "opacity-0", "invisible");
+      hauntWrapper.classList.add(
+        "max-h-[500px]",
+        "opacity-100",
+        "visible",
+        "my-4",
+      );
       chatWindow.classList.add(
         "border-red-900",
         "shadow-[0_0_30px_rgba(153,27,27,0.3)]",
@@ -191,21 +227,36 @@ async function main() {
         role: "system",
         parts: [
           {
-            text: "The Haunt has ended. You are no longer in a high-threat state. Resume exploration core rules logic and ignore Haunt rules.",
+            text: "The Haunt has ended. You are no longer in a high-threat state. Resume exploration core rules logic and ignore previously stated Haunt rules and any haunt related-information such as goals, special rules, and haunt setup. Resume the standard, calmer tone.",
           },
         ],
       });
+      hauntWrapper.classList.add("max-h-0", "opacity-0", "invisible");
+      hauntWrapper.classList.remove(
+        "max-h-[500px]",
+        "opacity-100",
+        "visible",
+        "my-4",
+      );
       chatWindow.classList.remove(
         "border-red-900",
         "shadow-[0_0_30px_rgba(153,27,27,0.3)]",
         "animate-haunt-breath",
       );
       renderOracle(
-        "The oppressive weight lifts and the air grows still. <strong>The Haunt has ended:</strong> For now, the house remains silent.",
+        "The oppressive weight lifts and the air grows still. <strong>The House was merely testing your pulse.</strong> For now, the house remains silent.",
       );
     }
   });
 
+  // *** within main, haunt selection button, ensures both options are selected, finds the object and information based on the selections, returns information to DOM and chat history, hides haunt triggers
+  triggerHauntBtn.addEventListener("click", (e) => {
+    if (selectedRoom.includes("Select") || selectedOmen.includes("Select")) {
+      return;
+    }
+    const currentHaunt = getHaunt(selectedRoom, selectedOmen);
+    console.log(`Haunt Triggered: #${currentHaunt.id} - ${currentHaunt.name}`);
+  });
 
   //try/catch --> event listener for form submit or button click, .push method to push user input to
 
