@@ -1,0 +1,20 @@
+{
+  "haunts": [
+    {
+      "id": 1,
+      "name": "The Mummy's Walk",
+      "traitor": "Revealed by the Omen: The Sarcophagus",
+      "goal_heroes": "Exterminate the Mummy by finding the Canopic Jars.",
+      "goal_traitor": "Kill all explorers or complete the ritual in the Crypt.",
+      "special_rules": "The Mummy moves 2 spaces and ignores speed limits."
+    },
+    {
+      "id": 2,
+      "name": "The Séance",
+      "traitor": "Highest Knowledge (excluding the Haunt Roller)",
+      "goal_heroes": "Exorcise the ghost using the Spirit Board in the Séance Room.",
+      "goal_traitor": "Possess three explorers before the clock strikes midnight.",
+      "special_rules": "Knowledge rolls are required to resist possession."
+    }
+  ]
+}
