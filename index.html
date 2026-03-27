@@ -18,16 +18,45 @@
   <body class="font-serif bg-black h-screen flex flex-col lg:items-center">
     <!-- Color scheme: Background: bg-stone-950; Chat area: bg-stone-900; Accents: text-red-900 or border-red-950; Text: text-stone-300 -->
 
+
+<!-- *SPLASH overlay -->
+
+<div id="splashScreen" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-stone-950 transition-opacity duration-1000">
+    
+    <div class="absolute inset-8 border border-stone-900 pointer-events-none"></div>
+
+    <div class="relative z-10 text-center space-y-8 animate-fade-in">
+        <h1 class="text-4xl md:text-6xl font-serif text-stone-200 tracking-[0.4em] uppercase">
+            The Rules Oracle
+        </h1>
+        
+        <p class="text-stone-500 text-xs md:text-sm lg:text-base tracking-widest uppercase italic px-16">
+            An interactive guide for Betrayal at the House on the Hill 2nd Edition
+        </p>
+
+        <button id="enterBtn" class="mt-12 px-10 py-3 border border-red-900 text-red-900 hover:bg-red-900 hover:text-stone-100 transition-all duration-500 text-xs uppercase tracking-[0.3em] group">
+            <span class="group-hover:tracking-[0.5em] transition-all">Enter</span>
+        </button>
+    </div>
+
+    <div class="absolute inset-0 bg-radial-gradient from-red-950/10 to-transparent opacity-30 animate-pulse"></div>
+</div>
+
+    <!-- page title and "about" overlay trigger -->
     <header
-      class="p-4 border-b border-stone-800 bg-stone-950 text-center w-screen"
+      class="flex flex-col p-4 border-b border-stone-800 bg-stone-950 text-center w-screen"
     >
+    <span class="about-trigger text-xs md:text-sm lg:text-base text-stone-600 font-mono" onclick="toggleAbout()">About</span>
       <nav></nav>
       <h1
         class="text-2xl tracking-widest uppercase text-red-900 drop-shadow-[0_2px_2px_rgba(0,0,0,1)] md:text-3xl lg:text-4xl"
       >
-        The Rulebook Oracle
+        The Rules Oracle
       </h1>
     </header>
+
+<!--* chatwindow -->
+
     <main class="flex flex-col grow overflow-hidden w-full items-center">
       <div
         id="chatWindow"
@@ -38,8 +67,11 @@
           class="flex flex-col flex-1 overflow-y-auto p-4 w-full custom-scrollbar"
         ></div>
 
+<!--* begins the toggle and input field section of the chatwindow -->
+
         <footer class="p-3 border-t border-stone-800 bg-stone-950">
-          <!-- Drop down menus and confirm button for selecting which Haunt rules to send to the AI -->
+          <!-- Drop down menus and confirm button for selecting which Haunt rules to send to the AI , this is hidden until the haunt toggle is activated-->
+          
           <div id="hauntWrapper" class="max-h-0 opacity-0 invisible overflow-hidden transition-all duration-500 ease-in-out">
             <!-- room selector dropdown -->
             <div id="roomDropdown" class="form-control w-full max-w-xs">
@@ -118,7 +150,7 @@
                 </select>
               </div>
             </div>
-
+<!-- after room and omen are selected, a button for confirming selection and getting the haunt info to the chat history, this section is then hidden again -->
             <div class="form-control w-full max-w-xs group">
               <button
                 id="triggerHauntBtn"
@@ -127,7 +159,7 @@
               </button>
             </div>
           </div>
-            <!-- State toggle: Exploration mode vs Haunt Activated mode -->
+            <!-- HAunt toggle: Exploration mode vs Haunt mode -->
             <label class="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" class="sr-only peer" id="hauntToggle" />
               <div
@@ -139,7 +171,7 @@
                 The Haunt Begins
               </span>
             </label>
-          <!-- End of state toggle -->
+          <!-- End of haunt toggle -->
           <form id="chatForm" class="max-w-4xl mx-auto flex gap-2">
             <input
               type="text"
@@ -158,7 +190,7 @@
       </div>
     </main>
     <footer
-      class="text-center pt-2 px-8 text-sm text-stone-500 border-t border-stone-700 mt-2"
+       class="text-center pt-2 px-8 text-sm text-stone-500 border-t border-stone-700 mt-2"
     >
       <p class="font-bold text-stone-400">
         Betrayal at House on the Hill
@@ -177,5 +209,81 @@
         class="hidden text-red-600 bg-red-900 text-stone-500 tracking-widest ml-5 px-1 underline decoration-red-900 italic uppercase"
       ></div>
     </footer>
+
+
+<!-- * SLIDE OUT ABOUT/CREDITS SECTION -->
+
+<div id="aboutOverlay" class="fixed inset-0 z-[100] hidden">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="toggleAbout()"></div>
+    
+    <div id="aboutDrawer" class="absolute right-0 top-0 h-full w-full max-w-md bg-stone-900 border-l border-stone-800 p-8 shadow-2xl transform transition-transform duration-300 translate-x-full overflow-y-auto">
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="text-xl font-serif text-stone-200 tracking-[0.3em] uppercase">About The Rules Oracle</h2>
+            <button onclick="toggleAbout()" class="text-stone-500 hover:text-white text-2xl">&times;</button>
+        </div>
+
+        <div class="space-y-6 text-stone-400 text-sm md:text-base lg:text-lg font-light leading-relaxed">
+            <p>This is a specialized AI "chatbot" interface for the tabletop RPG board game by Avon Hill Games <span class="text-stone-200 font-medium">Betrayal at House on the Hill</span> 2nd Edition, powered by Gemini 3 Flash-Lite.</p>
+            
+            <section class="space-y-4">
+    <h3 class="text-stone-500 uppercase text-sm md:text-base lg:text-lg tracking-widest font-bold border-b border-stone-800 pb-1">The Premise</h3>
+    <p>
+        Betrayal is a game with two stages. What starts as a cooperative exploration of a haunted mansion inevitably ends in a fight for survival once the <strong>Haunt</strong> is triggered. 
+    </p>
+    <p>
+      <div class="space-y-8 font-light leading-relaxed text-stone-400">
+    
+    <section class="relative pl-6 border-l border-stone-800">
+        <span class="absolute -left-[5px] top-0 h-2 w-2 rounded-full bg-stone-700"></span>
+        <h3 class="text-stone-200 text-sm md:text-base lg:text-lg uppercase tracking-[0.2em] font-bold mb-2">The Exploration</h3>
+        <p class="text-sm md:text-base lg:text-lg">
+            Players work together as a team to reveal the house, room by room. During this phase, you will collect 
+            <span class="text-stone-300">Items</span>, discover <span class="text-stone-300">Omens</span>, and 
+            strengthen your character's physical and mental traits before the shadows close in.
+        </p>
+    </section>
+
+    <section class="relative pl-6 border-l border-red-900/50">
+        <span class="absolute -left-[5px] top-0 h-2 w-2 rounded-full bg-red-700 shadow-[0_0_8px_rgba(185,28,28,0.8)]"></span>
+        <h3 class="text-red-700 text-sm md:text-base lg:text-lg uppercase tracking-[0.2em] font-bold mb-2">The Haunt</h3>
+        <p class="text-sm md:text-base lg:text-lg">
+            Once enough Omens are found, a <span class="text-red-600 italic">Haunt</span> is triggered. The 
+            house chooses its victim: one player typically becomes a <strong class="text-stone-200">Traitor</strong> 
+            with a hidden motive, while the remaining players become <strong class="text-stone-200">Heroes</strong> 
+            fighting for a desperate survival.
+        </p>
+    </section>
+
+    <section class="mt-10 p-5 bg-stone-950/40 border border-stone-800 rounded-lg">
+        <div class="flex items-center gap-3 mb-3">
+            <h3 class="text-stone-500 uppercase text-sm md:text-base lg:text-lg tracking-widest font-bold">The Oracle's Role</h3>
+        </div>
+        <p class="text-stone-400 text-sm md:text-base lg:text-lg leading-relaxed">
+            This interface acts as the <span class="text-stone-200 italic">"House's Voice,"</span> providing 
+            rule clarifications and atmospheric guidance. When the Haunt begins, the Oracle shifts its 
+            intelligence to focus on the specific win conditions of one of 50 Haunt scenarios. <br> <br>Players may use the Oracle to clarify the changing rules, track the progress of a haunt, or as a game master who will describe the settings and set the mood. The Oracle will guide players to use their handbooks when it doesn't have an answer.
+        </p>
+    </section>
+
+</div>
+    </p>
+
+</section>
+
+            <section class="border-t border-stone-800 pt-6">
+                <h3 class="text-stone-500 uppercase text-sm md:text-base lg:text-lg tracking-widest font-bold mb-4">Credits/Attributions</h3>
+                <ul class="space-y-2">
+                    <li><span class="text-stone-200">Pageflip:</span> <a href="https://freesound.org/s/429724/">Fellur at freesound.org</a></li>
+                    <li><span class="text-stone-200">Haunt Sting:</span> <a href="https://freesound.org/s/578343/">nomiqbomi at freesound.org</a></li>
+                    <li><span class="text-stone-200">All Game Content:</span> 2nd Edition of Betrayal at the House on the Hill, published by Avalon Hill Games, Inc and Hasbro, Inc.</li>
+                    <li>Website &copy; Ashley Flynn, 2026</li>
+                </ul>
+            </section>
+
+        </div>
+    </div>
+</div>
+
+
   </body>
 </html>

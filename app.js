@@ -1,5 +1,7 @@
 "use strict";
 
+const splashScreen = document.getElementById("splashScreen")
+const enterBtn = document.getElementById("enterBtn")
 const chatWindow = document.getElementById("chatWindow");
 const output = document.getElementById("output");
 const chatForm = document.getElementById("chatForm");
@@ -10,17 +12,35 @@ const hauntToggle = document.getElementById("hauntToggle");
 const triggerHauntBtn = document.getElementById("triggerHauntBtn");
 let hauntDatabase = [];
 const hauntMessages = [
-  "A sudden, heavy silence falls over the house. <strong>The Haunt has begun:</strong> You are no longer alone in these halls.",
-  "The air grows cold and the shadows begin to stretch. <strong>The Haunt has begun:</strong> The rules of survival have changed.",
-  "A chilling realization takes hold of your mind. <strong>The Haunt has begun:</strong> The true nature of this nightmare is revealed.",
-  "The exits vanish and the walls seem to close in. <strong>The Haunt has begun:</strong> There is no escape until the task is complete.",
-  "Trust evaporates like mist in the wind. <strong>The Haunt has begun:</strong> Dark intentions have finally come to light.",
+    "A sudden, heavy silence falls over the house. <strong>The Haunt has begun:</strong> You are no longer alone in these halls.",
+    "The air grows cold and the shadows begin to stretch. <strong>The Haunt has begun:</strong> The rules of survival have changed.",
+    "A chilling realization takes hold of your mind. <strong>The Haunt has begun:</strong> The true nature of this nightmare is revealed.",
+    "The exits vanish and the walls seem to close in. <strong>The Haunt has begun:</strong> There is no escape until the task is complete.",
+    "Trust evaporates like mist in the wind. <strong>The Haunt has begun:</strong> Dark intentions have finally come to light.",
 ];
 
 //Message history array: create empty array to build message history in, this will be what is posted to chatbot with each form-submit or send-button click
 const contents = [];
 
 // *** HELPER FUNCTIONS
+
+async function enterTheHouse() {
+    splashScreen.classList.add("splash-hidden");
+    setTimeout(() => {
+        splashScreen.style.display = "none";
+    }, 1000);
+    //render initial message, like a loading message
+    renderLoading();
+    // load the json file of haunt objects to make available as an array variable, hauntDatabase
+    loadHauntData();
+    // wake up proxy server for API key
+    await wakeUp();
+    //clear text content after proxy key server is woken up
+    clearChat();
+    //render hardcoded initial greeting "from" AI chat bot prompting input from the user
+    triggerGreeting();
+}
+
 //Speeds up the initial response time from fetching the key from render.com
 async function wakeUp() {
   try {
@@ -159,6 +179,25 @@ function getHaunt(room, omen) {
   );
 }
 
+// *** toggle overlay About/Credits
+
+function toggleAbout() {
+  const overlay = document.getElementById("aboutOverlay");
+  const drawer = document.getElementById("aboutDrawer");
+
+  if (overlay.classList.contains("hidden")) {
+    overlay.classList.remove("hidden");
+    setTimeout(() => {
+      drawer.classList.remove("translate-x-full");
+    }, 10);
+  } else {
+    drawer.classList.add("translate-x-full");
+    setTimeout(() => {
+      overlay.classList.add("hidden");
+    }, 300);
+  }
+}
+
 // *** Call Gemini API function ***
 // Returns AI response. Calls and inserts the API key to a POST request to Gemini AI API containing array of information from user input and saved message/response history created in main function
 async function callGemini(contents) {
@@ -224,17 +263,11 @@ async function callFakeGemini() {
 // ***************** MAIN function *******************
 
 async function main() {
-  //render initial message, like a loading message
-  renderLoading();
-  // load the json file of haunt objects to make available as an array variable, hauntDatabase
-  loadHauntData();
-  //!turn next line back on after testing
-  await wakeUp();
-  //clear text content after proxy key server is woken up
-  clearChat();
-  //render hardcoded initial greeting "from" AI chat bot prompting input from the user
-  triggerGreeting();
 
+    enterBtn.addEventListener("click", () => {
+        enterTheHouse();
+    })
+    
   // *** within main, event listener for the haunt toggle and effects, adds a message to chat history to notify Gemini that the haunt is active or inactive, renders a message to the user on the DOM
 
   hauntToggle.addEventListener("change", (e) => {
@@ -286,7 +319,7 @@ async function main() {
   });
 
   // *** within main, haunt selection button, ensures both options are selected, finds the object and information based on the selections, returns information to DOM and chat history, hides haunt triggers
-  triggerHauntBtn.addEventListener("click", (e) => {
+  triggerHauntBtn.addEventListener("click", () => {
     const selectedRoom = document.getElementById("roomSelect").value;
     const selectedOmen = document.getElementById("omenSelect").value;
     if (selectedRoom.includes("Select") || selectedOmen.includes("Select")) {
@@ -332,7 +365,7 @@ async function main() {
   //try/catch --> event listener for form submit or button click, .push method to push user input to
 
   // *** within main, user prompt submission, user input render to DOM, chat history building, sending info to AI with a response returned, then rendering response to DOM -- with send button click disabled for some seconds after each form submit due to rate limiting
-  try {
+    try {  
     chatForm.addEventListener("submit", async (e) => {
         e.preventDefault();
       let userText = inputField.value;

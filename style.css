@@ -53,10 +53,87 @@ top: 50%;
   transform: translate(-50%, -50%);
 width: 100%;
   height: 100%;
-  /* A deep, "dried blood" red radial gradient */
   background: radial-gradient(circle, rgba(153, 27, 27, 0.4) 0%, rgba(0, 0, 0, 0) 70%);
   /* background: radial-gradient(circle, rgba(0, 255, 0, 0.8) 0%, rgba(0, 0, 0, 0) 70%); */
-  z-index: -1; /* Pushes it behind the text */
+  z-index: -1; /* puts it behind the text */
   pointer-events: none;
   animation: mist-drift 8s ease-in-out infinite;
+}
+
+.about-trigger {
+    position: absolute;
+    top: .5rem;
+    right: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    cursor: pointer;
+    z-index: 30;
+    transition: color 0.3s ease;
+}
+
+.about-trigger::after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 1px;
+    background: #991b1b;
+    transition: width 0.3s ease;
+    margin-top: 2px;
+}
+
+.about-trigger:hover {
+    color: #d6d3d1;
+}
+
+.about-trigger:hover::after {
+    width: 100%;
+}
+
+
+
+/* animation and effects for the splash */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 3s ease-out forwards;
+}
+
+.splash-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#splashScreen .bg-radial-gradient {
+    background: radial-gradient(circle, rgba(141, 35, 35, .5) 0%, rgba(0, 0, 0, 0) 70%);
+
+}
+
+#splashScreen .bg-radial-gradient {
+    position: absolute;
+    inset: -20%; 
+    z-index: 1;
+    pointer-events: none;
+    
+    background: radial-gradient(
+        circle at center, 
+        rgba(117, 22, 22, 0.5) 0%,
+        rgba(109, 17, 17, 0.2) 40%, 
+        rgba(0, 0, 0, 0) 75%  
+    );
+    
+    animation: splash-pulse 8s ease-in-out infinite;
+}
+
+@keyframes splash-pulse {
+    0%, 100% { 
+        transform: scale(1); 
+        opacity: 0.6; 
+    }
+    50% { 
+        transform: scale(1.1); 
+        opacity: 0.9; 
+    }
 }
