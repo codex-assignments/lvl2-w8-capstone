@@ -59,7 +59,7 @@ async function getKey() {
       body: "{}",
     };
     const res = await fetch(
-      "https://proxy-key-0udy.onrender.com/get-key4",
+      "https://proxy-key-0udy.onrender.com/get-key5",
       options,
     );
     if (!res.ok) {
