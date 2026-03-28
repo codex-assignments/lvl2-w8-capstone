@@ -90,7 +90,7 @@ function renderOracle(AIResponse) {
     "max-w-[85%] md:max-w-[70%] lg:max-w-[60%] self-start bg-stone-900 mb-5 border-l-2 border-red-900 p-4 shadow-xl text-sm md:text-base lg:text-lg leading-relaxed text-stone-400 animate-oracle-appear oracle-bubble";
   p.innerHTML = AIResponse;
   output.appendChild(p);
-  const audio = new Audio("/assets/pageflip.wav");
+  const audio = new Audio("assets/pageflip.wav");
   audio.play().catch((error) => console.error("Audio playback failed:", error));
   output.scrollTop = output.scrollHeight;
 }
@@ -160,7 +160,7 @@ function renderHaunt(haunt) {
 
 async function loadHauntData() {
   try {
-    const res = await fetch("/assets/haunts.json");
+    const res = await fetch("assets/haunts.json");
     if (!res.ok) {
       throw new Error("Failed to load haunt data.");
     }
@@ -260,8 +260,7 @@ async function callFakeGemini() {
 //   });
 // }
 
-// ***************** MAIN function *******************
-
+// ************************************* MAIN function ********************************************
 async function main() {
 
     enterBtn.addEventListener("click", () => {
@@ -275,7 +274,7 @@ async function main() {
       //randomize haunt message
       const randomIndex = Math.floor(Math.random() * hauntMessages.length);
       // change to haunt mode
-      const audio = new Audio("/assets/hauntbegin.mp3");
+      const audio = new Audio("assets/hauntbegin.mp3");
       audio.play();
       renderOracle(hauntMessages[randomIndex]);
       hauntWrapper.classList.remove("max-h-0", "opacity-0", "invisible");
